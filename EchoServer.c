@@ -7,7 +7,9 @@
 
 char buffer[100] = "Hi, I'm Server\n";
 char rcvBuffer[100];
-
+char hiBuffer[100]= "안녕하세요.만나서 반가워요.";
+char nameBuffer[100]= "내 이름은 유승완이야.";
+char ageBuffer[100]= "나는 25살이야.";
 int main(){
 	int c_socket, s_socket;
 	struct sockaddr_in s_addr, c_addr;
@@ -48,10 +50,27 @@ int main(){
 		printf("클라이언트 접속 허용\n");
 		while(1){
 			n=read(c_socket,rcvBuffer,sizeof(rcvBuffer));//추가내용
+			rcvBuffer[n] = '\0'; //문자열 뒷부분 깨짐 방지
 			printf("rcvBuffer: %s\n",rcvBuffer);
 			if(strncasecmp(rcvBuffer,"quit",4) == 0 || strncasecmp(rcvBuffer,"kill server",11) == 0)
 				break;
+			if(strncasecmp(rcvBuffer,"안녕하세요.",11) == 0){
+				strcpy(rcvBuffer,hiBuffer);
+				write(c_socket,rcvBuffer,sizeof(rcvBuffer));
+				continue;
+			}	
+			if(strncasecmp(rcvBuffer,"이름이 머야?",12) == 0){
+				strcpy(rcvBuffer,nameBuffer);
+				write(c_socket,rcvBuffer,sizeof(rcvBuffer));
+				continue;
+			}
+			if(strncasecmp(rcvBuffer,"몇 살이야?",10) == 0){
+				strcpy(rcvBuffer,ageBuffer);			
+				write(c_socket,rcvBuffer,sizeof(rcvBuffer));
+				continue;
+			}
 			write(c_socket, rcvBuffer, n); //클라이언트에게 buffer의 내용을 전송함
+			
 		}
 		if(strncasecmp(rcvBuffer,"kill server",11) == 0)
 			break;

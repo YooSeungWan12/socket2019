@@ -11,7 +11,7 @@ int main(){
 	int c_socket; 
 	struct sockaddr_in c_addr;
 	int n;
-	char rcvBuffer[BUFSIZE];//서버에서 보내준 메세지를 저장하는 변수
+	char rcvBuffer[100];//서버에서 보내준 메세지를 저장하는 변수
 	char sendBuffer[BUFSIZE] = "Hi, I'm client.";
 	
 	//1. 클라이언트 소켓 생성
