@@ -30,6 +30,9 @@ int main(){
 		return -1;  //프로세스 종료
 	}
 	//4.서버에 메시지 보내기
+	//키보드로부터 메세지 입력받기
+	fgets(sendBuffer,sizeof(sendBuffer),stdin);//stdin : 키보드로부터입력받기
+	//서버로 메세지 전송
 	write(c_socket,sendBuffer,strlen(sendBuffer));
 
 
