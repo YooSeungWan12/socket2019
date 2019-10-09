@@ -69,6 +69,11 @@ int main(){
 				write(c_socket,rcvBuffer,sizeof(rcvBuffer));
 				continue;
 			}
+			if(strncasecmp(rcvBuffer,"strlen",6) == 0){
+					
+				write(c_socket,strlen(rcvBuffer)-7,sizeof(rcvBuffer));
+				continue;
+			}
 			write(c_socket, rcvBuffer, n); //클라이언트에게 buffer의 내용을 전송함
 			
 		}
