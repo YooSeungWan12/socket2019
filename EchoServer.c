@@ -6,6 +6,8 @@
 #define PORT 10000
 
 char buffer[100] = "Hi, I'm Server\n";
+//sizeof(buffer)=>100(배열의크기)
+//strlen(buffer)=>15(buffer의크기)
 char rcvBuffer[100];
 char hiBuffer[100]= "안녕하세요.만나서 반가워요.";
 char nameBuffer[100]= "내 이름은 유승완이야.";
@@ -54,29 +56,22 @@ int main(){
 			printf("rcvBuffer: %s\n",rcvBuffer);
 			if(strncasecmp(rcvBuffer,"quit",4) == 0 || strncasecmp(rcvBuffer,"kill server",11) == 0)
 				break;
-			if(strncasecmp(rcvBuffer,"안녕하세요.",11) == 0){
-				strcpy(rcvBuffer,hiBuffer);
-				write(c_socket,rcvBuffer,sizeof(rcvBuffer));
-				continue;
-			}	
-			if(strncasecmp(rcvBuffer,"이름이 머야?",12) == 0){
-				strcpy(rcvBuffer,nameBuffer);
-				write(c_socket,rcvBuffer,sizeof(rcvBuffer));
-				continue;
-			}
-			if(strncasecmp(rcvBuffer,"몇 살이야?",10) == 0){
-				strcpy(rcvBuffer,ageBuffer);			
-				write(c_socket,rcvBuffer,sizeof(rcvBuffer));
-				continue;
-			}
+			else if(!strncasecmp(rcvBuffer,"안녕하세요.",strlen("안녕하세요")))
+				strcpy(buffer,"안녕하세요. 만나서 반가워요.");
+			else if(!strncasecmp(rcvBuffer,"이름이 머야?",strlen("이름이 머야?")))
+				strcpy(buffer,"내 이름은 유승완이야.");
+			else if(!strncasecmp(rcvBuffer,"몇 살이야?",strlen("몇 살이야?")))
+				strcpy(buffer,"나는 25살이야.");
 			
-			write(c_socket, rcvBuffer, n); //클라이언트에게 buffer의 내용을 전송함
-			
+			else
+				strcpy(buffer,"무슨 말인지 모르겠습니다.");
+
+		write(c_socket,buffer,strlen(buffer));
 		}
-		if(strncasecmp(rcvBuffer,"kill server",11) == 0)
-			break;
 
 		close(c_socket);
+		if(strncasecmp(rcvBuffer,"kill server",11) == 0)
+		break;
 	}
 	close(s_socket);
 	return 0;	
