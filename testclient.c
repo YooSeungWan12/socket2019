@@ -5,13 +5,13 @@
 
 #define PORT 10000
 #define IPADDR "127.0.0.1"
-#define BUFSIZE 100
+#define BUFSIZE 10000
 
 int main(){
 	int c_socket; 
 	struct sockaddr_in c_addr;
 	int n;
-	char rcvBuffer[255];//서버에서 보내준 메세지를 저장하는 변수
+	char rcvBuffer[BUFSIZE];//서버에서 보내준 메세지를 저장하는 변수
 	char sendBuffer[BUFSIZE] = "Hi, I'm client.";
 	
 	//1. 클라이언트 소켓 생성
@@ -49,28 +49,20 @@ int main(){
 			return -1;
 		}
 		
+		
+		
 		if(!strncasecmp(sendBuffer,"readfile ",strlen("readfile "))){
-			FILE *fp;
-			char buff[255];
-			
-			fp = fopen(rcvBuffer,"r");
-			if(fp){
-				while(fgets(buff,255,(FILE *)fp)){
-					printf("%s",buff);
-				}
-		
-			}
-		continue;
+			rcvBuffer[n] = '\0'; //문자열 뒷부분 깨짐 방지
+			printf("%s\n",rcvBuffer);
+			printf("rcvBuffer length:%d\n",n);
 		}
+		else{
 		
-
-		
-
 		rcvBuffer[n] = '\0'; //문자열 뒷부분 깨짐 방지
 		printf("received data: %s\n", rcvBuffer); //서버에서 받은 메세지 출력
 		printf("rcvBuffer length:%d\n",n);
 		
-		
+		}
 	}
 	close(c_socket);
 	return 0;	

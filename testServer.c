@@ -4,11 +4,11 @@
 #include <string.h>
 
 #define PORT 10000
-
-char buffer[255] = "Hi, I'm Server\n";
+#define BUFSIZE 10000
+char buffer[BUFSIZE] = "Hi, I'm Server\n";
 //sizeof(buffer)=>100(배열의크기)
 //strlen(buffer)=>15(buffer의크기)
-char rcvBuffer[255];
+char rcvBuffer[BUFSIZE];
 char hiBuffer[100]= "안녕하세요.만나서 반가워요.";
 char nameBuffer[100]= "내 이름은 유승완이야.";
 char ageBuffer[100]= "나는 25살이야.";
@@ -86,14 +86,63 @@ int main(){
 
 			}
 			else if(!strncasecmp(rcvBuffer,"readfile ",strlen("readfile "))){
-			
+			FILE *fp;
+			int cnt=0;
+			char *str[10];
 			char *token;
-			char *test;
+			char *command;
+			token = strtok(rcvBuffer," ");// token = readfile
+			token = strtok(NULL," "); // token=<파일명>
+			//command= strtok(NULL,"\0");
+			//while(token != NULL){
+				//str[cnt] = token;//str[0]=readfile,str[1]=파일명
+				//cnt++;
+			//	token = strtok(NULL, " ");//token=파일명
+			//}
+			//if(cnt < 2){
+				//strcpy(buffer,"파일명을 입력해주세요");
+			//}else{
+					
+					fp = fopen(token,"r");//읽기모드로 열겠다.
 			
-			token = strtok(rcvBuffer," ");
-			test= strtok(NULL,"\0");
-			strcpy(buffer,test);
-			}
+			
+					if(fp){//정상적으로 파일이 오픈되었다면.
+						//char	tempStr[BUFSIZE];  파일 내용을 저장할 변수.
+						memset(buffer,0,BUFSIZE);//buffer초기화
+			
+						while(fgets(rcvBuffer,BUFSIZE,(FILE *)fp)){//while(fgets(tempStr, 2500, (FILE *)fp))
+							strcat(buffer,rcvBuffer);//여러줄의 내용을 하나의 buffer에 저장하기위해 strcat()함수 사용				
+						}
+					fclose(fp);
+					}else{//해당 파일이 없는경우,
+						strcpy(buffer,"해당 파일은 존재하지 않습니다.");
+
+					}
+
+				}
+			//}
+		else if(!strncasecmp(rcvBuffer,"exec",strlen("exec"))){
+//		else if(!strncasecmp(rcvBuffer,"exec ", 5)){
+		
+			char *token;
+			char *command;
+			token = strtok(rcvBuffer," ");//token = exec
+			command= strtok(NULL,"\0");//exec뒤에있는 모든 문자열을 command로저장
+			printf("command:%s\n",command);
+//			int result = system(command);
+	//		if(!result)
+		//{
+		//	sprintf(buffer,"[%s] command is executed",command);
+		//}
+		//	else{
+			//sprintf(buffer,"[%s] command is failed",command);
+		//}
+		
+			if(system(command)==0)
+			sprintf(buffer,"[%s] command is executed",command);
+			else
+			sprintf(buffer,"[%s] command is failed",command);
+		}
 			else
 				strcpy(buffer,"무슨 말인지 모르겠습니다.");
 
