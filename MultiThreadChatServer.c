@@ -76,6 +76,7 @@ void *do_chat(void *arg)
             //
             ///////////////////////////////
             if(strstr(chatData,"escape")) {
+				write(c_socket, escape, strlen(escape));
                 popClient(c_socket);
                 break;
             }
